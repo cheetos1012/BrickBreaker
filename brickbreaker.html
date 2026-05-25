@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>BrickBreaker — Неон</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,27 +19,24 @@
         }
         
         .game-wrapper {
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .header {
             display: flex;
             justify-content: space-between;
-            width: 600px;
+            width: 620px;
             padding: 0 10px;
             color: #a0b0ff;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 1px;
         }
         
-        .canvas-container {
-            position: relative;
-        }
+        .canvas-container { position: relative; }
         
         canvas {
             border: 2px solid rgba(100, 140, 255, 0.3);
@@ -50,118 +47,86 @@
         
         /* Меню */
         .menu-overlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 600px; height: 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            pointer-events: none;
+            position: absolute; top: 0; left: 0;
+            width: 620px; height: 400px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 10; pointer-events: none;
         }
         .menu-overlay.hidden { display: none; }
         
         .menu-bg {
-            position: absolute;
-            top: 0; left: 0;
+            position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(5, 5, 15, 0.85);
+            background: rgba(5, 5, 15, 0.88);
             border-radius: 8px;
         }
         
         .menu-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            pointer-events: auto;
+            position: relative; z-index: 2;
+            text-align: center; pointer-events: auto;
         }
         
         .menu-title {
-            font-size: 2.6rem;
-            font-weight: 900;
-            letter-spacing: 3px;
-            margin-bottom: 6px;
+            font-size: 2.4rem; font-weight: 900;
+            letter-spacing: 2px; margin-bottom: 5px;
             background: linear-gradient(135deg, #ff6b9d, #ff8a50, #ffcc44, #4ade80, #44ccff, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: titleGlow 2s ease-in-out infinite;
-            text-shadow: none;
-        }
-        @keyframes titleGlow {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.3); }
         }
         
         .menu-subtitle {
-            color: #667;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            margin-bottom: 30px;
+            color: #667; font-size: 0.75rem;
+            letter-spacing: 3px; margin-bottom: 24px;
             text-transform: uppercase;
         }
         
         .menu-btn {
-            display: block;
-            width: 220px;
-            padding: 14px 30px;
-            margin: 8px auto;
-            border-radius: 25px;
+            display: block; width: 220px; padding: 13px 28px;
+            margin: 7px auto; border-radius: 25px;
             border: 2px solid #4488ff;
             background: rgba(68, 136, 255, 0.15);
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            letter-spacing: 1px;
-            transition: all 0.3s;
+            color: #fff; font-size: 0.95rem;
+            font-weight: 700; cursor: pointer;
+            letter-spacing: 1px; transition: all 0.3s;
             font-family: inherit;
             box-shadow: 0 0 20px rgba(68, 136, 255, 0.2);
         }
         .menu-btn:hover {
             background: rgba(68, 136, 255, 0.3);
             box-shadow: 0 0 40px rgba(68, 136, 255, 0.5);
-            transform: scale(1.05);
+            transform: scale(1.04);
         }
-        .menu-btn.secondary {
-            border-color: rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.05);
-            box-shadow: none;
-            font-weight: 500;
-            font-size: 0.85rem;
+        .menu-btn.small {
+            width: auto; padding: 8px 18px; font-size: 0.78rem;
+            border-radius: 20px; display: inline-block; margin: 4px;
         }
-        .menu-btn.secondary:hover {
-            border-color: rgba(255,255,255,0.4);
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        .menu-btn.selected {
+            background: rgba(68, 136, 255, 0.4);
+            border-color: #88bbff;
+            box-shadow: 0 0 30px rgba(68, 136, 255, 0.5);
         }
         
-        .menu-keys {
-            color: #556;
-            font-size: 0.7rem;
-            margin-top: 20px;
-            letter-spacing: 0.5px;
-            line-height: 1.6;
-        }
-        .menu-keys span {
-            color: #889;
+        .speed-label {
+            color: #889; font-size: 0.75rem;
+            margin: 10px 0 4px; letter-spacing: 1px;
         }
         
         .message {
-            color: #ffaa00;
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-align: center;
-            min-height: 28px;
-            letter-spacing: 1px;
-            margin-top: 5px;
+            color: #ffaa00; font-size: 1rem;
+            font-weight: 700; text-align: center;
+            min-height: 26px; letter-spacing: 1px;
         }
-        
         .controls {
-            color: #556;
-            font-size: 0.7rem;
+            color: #556; font-size: 0.65rem;
             letter-spacing: 1px;
+        }
+
+        @media (max-width: 640px) {
+            canvas { width: 100%; height: auto; }
+            .header { width: 95vw; font-size: 0.7rem; }
+            .menu-overlay { width: 95vw; height: auto; aspect-ratio: 620/400; }
+            .menu-title { font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -170,90 +135,124 @@
         <div class="header">
             <span>🏆 <span id="score">0</span></span>
             <span>❤️ <span id="lives">3</span></span>
-            <span>🎯 Уровень <span id="level">1</span></span>
+            <span>🎯 Ур <span id="level">1</span></span>
             <span>⚡ <span id="speed">1x</span></span>
+            <span>🧱 <span id="brickCount">40</span></span>
         </div>
         <div class="canvas-container">
-            <canvas id="game" width="600" height="400"></canvas>
-            <!-- Меню -->
+            <canvas id="game" width="620" height="400"></canvas>
+            
+            <!-- Главное меню -->
             <div class="menu-overlay" id="menuOverlay">
                 <div class="menu-bg"></div>
                 <div class="menu-content">
                     <div class="menu-title">BRICK<br>BREAKER</div>
                     <div class="menu-subtitle">Неоновая классика</div>
-                    <button class="menu-btn" onclick="startGame()">▶ ИГРАТЬ</button>
+                    <button class="menu-btn" onclick="showSpeedMenu()">▶ ИГРАТЬ</button>
                 </div>
             </div>
+            
+            <!-- Выбор скорости -->
+            <div class="menu-overlay hidden" id="speedMenu">
+                <div class="menu-bg"></div>
+                <div class="menu-content">
+                    <div class="menu-title" style="font-size:1.5rem;">СКОРОСТЬ</div>
+                    <div class="speed-label">Выбери начальную скорость</div>
+                    <button class="menu-btn small" onclick="selectSpeed(1)">🐢 Медленно</button>
+                    <button class="menu-btn small selected" id="speed1">⚡ Средне</button>
+                    <button class="menu-btn small" onclick="selectSpeed(2)">🚀 Быстро</button>
+                    <button class="menu-btn small" onclick="selectSpeed(3)">💀 Хардкор</button>
+                    <button class="menu-btn" onclick="startGame()" style="margin-top:14px;">▶ СТАРТ</button>
+                    <button class="menu-btn" onclick="backToMenu()" style="border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.05); font-weight:400;">← Назад</button>
+                </div>
+            </div>
+            
             <!-- Game Over -->
             <div class="menu-overlay hidden" id="gameOverOverlay">
                 <div class="menu-bg"></div>
                 <div class="menu-content">
-                    <div class="menu-title" style="font-size:1.8rem; color:#ff6b6b; -webkit-text-fill-color:#ff6b6b;">ИГРА ОКОНЧЕНА</div>
-                    <div class="menu-subtitle" id="finalScore" style="margin-bottom:20px;">Счёт: 0</div>
+                    <div class="menu-title" style="font-size:1.6rem; -webkit-text-fill-color:#ff6b6b;">ИГРА ОКОНЧЕНА</div>
+                    <div class="menu-subtitle" id="finalScore" style="margin-bottom:18px;">Счёт: 0</div>
                     <button class="menu-btn" onclick="startGame()">🔄 ЗАНОВО</button>
+                    <button class="menu-btn" onclick="showSpeedMenu()" style="border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.05); font-weight:400;">🎮 В МЕНЮ</button>
                 </div>
             </div>
+            
             <!-- Пауза -->
             <div class="menu-overlay hidden" id="pauseOverlay">
                 <div class="menu-bg" style="background:rgba(5,5,15,0.7);"></div>
                 <div class="menu-content">
-                    <div class="menu-title" style="font-size:1.8rem;">ПАУЗА</div>
+                    <div class="menu-title" style="font-size:1.6rem;">ПАУЗА</div>
                     <button class="menu-btn" onclick="resumeGame()">▶ ПРОДОЛЖИТЬ</button>
+                    <button class="menu-btn" onclick="showSpeedMenu()" style="border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.05); font-weight:400;">🎮 В МЕНЮ</button>
                 </div>
             </div>
         </div>
         <div class="message" id="message"></div>
-        <div class="controls">← → мышка — платформа | Пробел — пауза | R — рестарт</div>
+        <div class="controls">Мышь / Тач / Стрелки — платформа | Пробел — пауза | R — рестарт</div>
     </div>
 
     <script>
         const canvas = document.getElementById('game');
         const ctx = canvas.getContext('2d');
         
-        const W = 600, H = 400;
+        const W = 620, H = 400;
         
         let score, lives, level, gameRunning, gamePaused, gameOver, gameStarted;
-        let speedMultiplier, speedTimer, particles;
+        let speedMultiplier, baseSpeed, speedTimer, selectedSpeed;
+        let particles, bricks;
+        let brickRows, brickCols;
         
-        const paddle = { w: 90, h: 12, x: W / 2 - 45, y: H - 30, speed: 7 };
+        const paddle = { w: 90, h: 12, x: W / 2 - 45, y: H - 30, speed: 8 };
         const ball = {
-            x: W / 2, y: H - 50, r: 7, dx: 4, dy: -4, baseSpeed: 5,
-            get speed() { return this.baseSpeed * speedMultiplier; }
+            x: W / 2, y: H - 50, r: 7, dx: 4, dy: -4,
+            get speed() { return (baseSpeed + level * 0.3) * speedMultiplier; }
         };
         
-        let bricks = [];
-        const brickRows = 5, brickCols = 8, brickW = 66, brickH = 20, brickPad = 6;
-        const brickOffsetX = (W - brickCols * (brickW + brickPad)) / 2;
-        const brickOffsetY = 50;
         const colors = ['#ff6b9d', '#ff8a50', '#ffcc44', '#4ade80', '#44ccff', '#a78bfa'];
         
         function resetState() {
-            score = 0;
-            lives = 3;
-            level = 1;
-            gameRunning = false;
-            gamePaused = false;
-            gameOver = false;
-            gameStarted = false;
-            speedMultiplier = 1;
-            speedTimer = 0;
+            score = 0; lives = 3; level = 1;
+            gameRunning = false; gamePaused = false; gameOver = false; gameStarted = false;
+            speedMultiplier = 1; speedTimer = 0;
             particles = [];
             paddle.x = W / 2 - paddle.w / 2;
+            brickRows = 5; brickCols = 8;
         }
         
         function createBricks() {
             bricks = [];
+            const brickW = (W - (brickCols + 1) * 8) / brickCols;
+            const brickH = 18;
+            const pad = 8;
+            const offsetX = (W - brickCols * (brickW + pad) + pad) / 2;
+            const offsetY = 50;
+            
             for (let row = 0; row < brickRows; row++) {
                 bricks[row] = [];
                 for (let col = 0; col < brickCols; col++) {
                     bricks[row][col] = {
-                        x: brickOffsetX + col * (brickW + brickPad),
-                        y: brickOffsetY + row * (brickH + brickPad),
+                        x: offsetX + col * (brickW + pad),
+                        y: offsetY + row * (brickH + pad),
                         w: brickW, h: brickH, alive: true,
                         color: colors[(row + level - 1) % colors.length],
                     };
                 }
             }
+            document.getElementById('brickCount').textContent = countBricks();
+        }
+        
+        function countBricks() {
+            let c = 0;
+            for (const row of bricks)
+                for (const b of row)
+                    if (b.alive) c++;
+            return c;
+        }
+        
+        function expandMap() {
+            if (brickRows < 10) brickRows++;
+            if (brickCols < 12) brickCols++;
         }
         
         function resetBall() {
@@ -262,7 +261,6 @@
             const angle = (Math.random() * 0.6 - 0.3) + Math.PI / 2;
             ball.dx = Math.cos(angle) * ball.speed;
             ball.dy = -Math.sin(angle) * ball.speed;
-            ball.baseSpeed = 5 + level * 0.3;
             speedMultiplier = 1;
             speedTimer = 0;
         }
@@ -304,16 +302,41 @@
             ctx.shadowBlur = 0;
         }
         
+        function showSpeedMenu() {
+            hideAllMenus();
+            document.getElementById('speedMenu').classList.remove('hidden');
+        }
+        
+        function backToMenu() {
+            hideAllMenus();
+            document.getElementById('menuOverlay').classList.remove('hidden');
+        }
+        
+        function selectSpeed(s) {
+            selectedSpeed = s;
+            baseSpeed = [4, 5.5, 7, 9][s];
+            document.querySelectorAll('#speedMenu .menu-btn.small').forEach((b, i) => {
+                b.classList.toggle('selected', i === s);
+            });
+        }
+        
+        function hideAllMenus() {
+            ['menuOverlay', 'speedMenu', 'gameOverOverlay', 'pauseOverlay'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+        }
+        
         function startGame() {
             resetState();
+            if (selectedSpeed === undefined) selectedSpeed = 1;
+            baseSpeed = [4, 5.5, 7, 9][selectedSpeed];
             gameRunning = true;
             gameStarted = true;
+            brickRows = 5; brickCols = 8;
             createBricks();
             resetBall();
             updateUI();
-            document.getElementById('menuOverlay').classList.add('hidden');
-            document.getElementById('gameOverOverlay').classList.add('hidden');
-            document.getElementById('pauseOverlay').classList.add('hidden');
+            hideAllMenus();
             document.getElementById('message').textContent = '';
         }
         
@@ -335,6 +358,7 @@
             document.getElementById('lives').textContent = lives;
             document.getElementById('level').textContent = level;
             document.getElementById('speed').textContent = speedMultiplier.toFixed(1) + 'x';
+            document.getElementById('brickCount').textContent = countBricks();
         }
         
         function loseLife() {
@@ -354,7 +378,8 @@
             const allDead = bricks.every(row => row.every(b => !b.alive));
             if (allDead) {
                 level++;
-                document.getElementById('message').textContent = '🎉 Уровень ' + level + '!';
+                expandMap();
+                document.getElementById('message').textContent = '🎉 Уровень ' + level + '! Карта расширена!';
                 createBricks();
                 paddle.x = W / 2 - paddle.w / 2;
                 resetBall();
@@ -364,25 +389,24 @@
         }
         
         function ballBrickCollision(brick) {
-            const bx = ball.x, by = ball.y, br = ball.r;
-            const closestX = Math.max(brick.x, Math.min(bx, brick.x + brick.w));
-            const closestY = Math.max(brick.y, Math.min(by, brick.y + brick.h));
-            return Math.hypot(bx - closestX, by - closestY) < br;
+            const closestX = Math.max(brick.x, Math.min(ball.x, brick.x + brick.w));
+            const closestY = Math.max(brick.y, Math.min(ball.y, brick.y + brick.h));
+            return Math.hypot(ball.x - closestX, ball.y - closestY) < ball.r;
         }
         
         function update() {
             if (!gameRunning || gamePaused || gameOver) return;
             
             speedTimer += 0.016;
-            if (speedTimer > 5) {
+            if (speedTimer > 4) {
                 speedTimer = 0;
-                speedMultiplier = Math.min(3, speedMultiplier + 0.05);
+                speedMultiplier = Math.min(3, speedMultiplier + 0.04);
                 updateUI();
             }
             
             updateParticles();
             
-            const spd = speedMultiplier * 0.7 + 0.3;
+            const spd = speedMultiplier * 0.6 + 0.4;
             ball.x += ball.dx * spd;
             ball.y += ball.dy * spd;
             
@@ -422,8 +446,8 @@
                 }
             }
             
-            const targetX = mouseX - paddle.w / 2;
-            paddle.x += (targetX - paddle.x) * 0.35;
+            // Мгновенное следование за мышью (как в классическом арканоиде)
+            paddle.x = mouseX - paddle.w / 2;
             paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
         }
         
@@ -446,19 +470,19 @@
                 for (const b of row) {
                     if (!b.alive) continue;
                     ctx.shadowColor = b.color;
-                    ctx.shadowBlur = 12;
+                    ctx.shadowBlur = 10;
                     ctx.fillStyle = b.color;
                     ctx.beginPath();
                     ctx.roundRect(b.x, b.y, b.w, b.h, 3);
                     ctx.fill();
                     ctx.fillStyle = 'rgba(255,255,255,0.2)';
-                    ctx.fillRect(b.x + 4, b.y + 3, b.w - 8, b.h / 3);
+                    ctx.fillRect(b.x + 3, b.y + 2, b.w - 6, b.h / 3);
                 }
             }
             
             // Платформа
             ctx.shadowColor = '#4488ff';
-            ctx.shadowBlur = 18;
+            ctx.shadowBlur = 16;
             const grad = ctx.createLinearGradient(paddle.x, paddle.y, paddle.x, paddle.y + paddle.h);
             grad.addColorStop(0, '#66aaff');
             grad.addColorStop(1, '#2255cc');
@@ -469,7 +493,7 @@
             
             // Шарик
             ctx.shadowColor = '#ffffff';
-            ctx.shadowBlur = 25;
+            ctx.shadowBlur = 22;
             const ballGrad = ctx.createRadialGradient(ball.x - 2, ball.y - 2, 0, ball.x, ball.y, ball.r);
             ballGrad.addColorStop(0, '#ffffff');
             ballGrad.addColorStop(0.5, '#eeeeff');
@@ -487,6 +511,14 @@
         canvas.addEventListener('mousemove', (e) => {
             mouseX = e.clientX - canvas.getBoundingClientRect().left;
         });
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            mouseX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+        }, { passive: false });
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            mouseX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+        }, { passive: false });
         
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
@@ -528,7 +560,6 @@
             requestAnimationFrame(gameLoop);
         }
         
-        // Старт
         resetState();
         createBricks();
         updateUI();
