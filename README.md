@@ -30,8 +30,6 @@
 
 Открой `index.html` в браузере. Никаких зависимостей.
 
-Или играй онлайн: [brickbreaker-neon.netlify.app](https://brickbreaker-neon.netlify.app)
-
 ## 🛠 Стек
 
 - HTML5 Canvas
