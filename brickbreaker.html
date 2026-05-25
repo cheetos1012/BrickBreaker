@@ -16,7 +16,11 @@
             overflow: hidden;
             font-family: 'Segoe UI', sans-serif;
             user-select: none;
+            transition: background 0.5s;
         }
+        body.theme-ocean { background: #0a141e; }
+        body.theme-sunset { background: #1a0f0f; }
+        body.theme-forest { background: #0a140f; }
         
         .game-wrapper {
             display: flex;
@@ -43,7 +47,11 @@
             border-radius: 8px;
             box-shadow: 0 0 30px rgba(80, 120, 255, 0.15);
             background: #0d0d20;
+            transition: background 0.5s, border-color 0.5s, box-shadow 0.5s;
         }
+        body.theme-ocean canvas { border-color: rgba(0, 180, 200, 0.3); box-shadow: 0 0 30px rgba(0, 180, 200, 0.15); background: #0a1822; }
+        body.theme-sunset canvas { border-color: rgba(255, 120, 60, 0.3); box-shadow: 0 0 30px rgba(255, 120, 60, 0.15); background: #1a1215; }
+        body.theme-forest canvas { border-color: rgba(80, 200, 100, 0.3); box-shadow: 0 0 30px rgba(80, 200, 100, 0.15); background: #0a1510; }
         
         /* Меню */
         .menu-overlay {
@@ -77,7 +85,7 @@
         
         .menu-subtitle {
             color: #667; font-size: 0.75rem;
-            letter-spacing: 3px; margin-bottom: 24px;
+            letter-spacing: 3px; margin-bottom: 20px;
             text-transform: uppercase;
         }
         
@@ -99,17 +107,33 @@
         }
         .menu-btn.small {
             width: auto; padding: 8px 18px; font-size: 0.78rem;
-            border-radius: 20px; display: inline-block; margin: 4px;
+            border-radius: 20px; display: inline-block; margin: 3px;
         }
         .menu-btn.selected {
             background: rgba(68, 136, 255, 0.4);
             border-color: #88bbff;
             box-shadow: 0 0 30px rgba(68, 136, 255, 0.5);
         }
+        .menu-btn.theme-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            padding: 0; display: inline-flex;
+            align-items: center; justify-content: center;
+            font-size: 1.1rem; margin: 3px;
+        }
+        .menu-btn.theme-btn.selected {
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+        .menu-btn.back-btn {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            font-weight: 400; font-size: 0.85rem;
+        }
         
-        .speed-label {
-            color: #889; font-size: 0.75rem;
-            margin: 10px 0 4px; letter-spacing: 1px;
+        .section-label {
+            color: #889; font-size: 0.7rem;
+            margin: 12px 0 4px; letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
         
         .message {
@@ -123,10 +147,11 @@
         }
 
         @media (max-width: 640px) {
-            canvas { width: 100%; height: auto; }
-            .header { width: 95vw; font-size: 0.7rem; }
-            .menu-overlay { width: 95vw; height: auto; aspect-ratio: 620/400; }
-            .menu-title { font-size: 1.6rem; }
+            canvas { width: 98vw; height: auto; }
+            .header { width: 98vw; font-size: 0.7rem; }
+            .menu-overlay { width: 98vw; height: auto; aspect-ratio: 620/400; }
+            .menu-title { font-size: 1.5rem; }
+            .menu-btn { width: 180px; padding: 10px 22px; font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -148,22 +173,38 @@
                 <div class="menu-content">
                     <div class="menu-title">BRICK<br>BREAKER</div>
                     <div class="menu-subtitle">Неоновая классика</div>
-                    <button class="menu-btn" onclick="showSpeedMenu()">▶ ИГРАТЬ</button>
+                    <button class="menu-btn" onclick="showSettings()">▶ ИГРАТЬ</button>
+                    <div class="section-label">Тема</div>
+                    <div>
+                        <button class="menu-btn small theme-btn" onclick="setTheme('default')" title="Космос">🌌</button>
+                        <button class="menu-btn small theme-btn" onclick="setTheme('ocean')" title="Океан">🌊</button>
+                        <button class="menu-btn small theme-btn" onclick="setTheme('sunset')" title="Закат">🌅</button>
+                        <button class="menu-btn small theme-btn" onclick="setTheme('forest')" title="Лес">🌿</button>
+                    </div>
                 </div>
             </div>
             
-            <!-- Выбор скорости -->
-            <div class="menu-overlay hidden" id="speedMenu">
+            <!-- Настройки (скорость + тема) -->
+            <div class="menu-overlay hidden" id="settingsMenu">
                 <div class="menu-bg"></div>
                 <div class="menu-content">
-                    <div class="menu-title" style="font-size:1.5rem;">СКОРОСТЬ</div>
-                    <div class="speed-label">Выбери начальную скорость</div>
-                    <button class="menu-btn small" onclick="selectSpeed(1)">🐢 Медленно</button>
-                    <button class="menu-btn small selected" id="speed1">⚡ Средне</button>
-                    <button class="menu-btn small" onclick="selectSpeed(2)">🚀 Быстро</button>
-                    <button class="menu-btn small" onclick="selectSpeed(3)">💀 Хардкор</button>
+                    <div class="menu-title" style="font-size:1.5rem;">НАСТРОЙКИ</div>
+                    <div class="section-label">Скорость</div>
+                    <div id="speedButtons">
+                        <button class="menu-btn small" onclick="selectSpeed(0)">🐢 Медленно</button>
+                        <button class="menu-btn small" onclick="selectSpeed(1)">⚡ Средне</button>
+                        <button class="menu-btn small" onclick="selectSpeed(2)">🚀 Быстро</button>
+                        <button class="menu-btn small" onclick="selectSpeed(3)">💀 Хардкор</button>
+                    </div>
+                    <div class="section-label">Тема</div>
+                    <div>
+                        <button class="menu-btn small theme-btn" onclick="setTheme('default')">🌌</button>
+                        <button class="menu-btn small theme-btn" onclick="setTheme('ocean')">🌊</button>
+                        <button class="menu-btn small theme-btn" onclick="setTheme('sunset')">🌅</button>
+                        <button class="menu-btn small theme-btn" onclick="setTheme('forest')">🌿</button>
+                    </div>
                     <button class="menu-btn" onclick="startGame()" style="margin-top:14px;">▶ СТАРТ</button>
-                    <button class="menu-btn" onclick="backToMenu()" style="border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.05); font-weight:400;">← Назад</button>
+                    <button class="menu-btn back-btn" onclick="backToMenu()">← Назад</button>
                 </div>
             </div>
             
@@ -174,7 +215,7 @@
                     <div class="menu-title" style="font-size:1.6rem; -webkit-text-fill-color:#ff6b6b;">ИГРА ОКОНЧЕНА</div>
                     <div class="menu-subtitle" id="finalScore" style="margin-bottom:18px;">Счёт: 0</div>
                     <button class="menu-btn" onclick="startGame()">🔄 ЗАНОВО</button>
-                    <button class="menu-btn" onclick="showSpeedMenu()" style="border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.05); font-weight:400;">🎮 В МЕНЮ</button>
+                    <button class="menu-btn back-btn" onclick="showSettings()">🎮 В МЕНЮ</button>
                 </div>
             </div>
             
@@ -184,7 +225,7 @@
                 <div class="menu-content">
                     <div class="menu-title" style="font-size:1.6rem;">ПАУЗА</div>
                     <button class="menu-btn" onclick="resumeGame()">▶ ПРОДОЛЖИТЬ</button>
-                    <button class="menu-btn" onclick="showSpeedMenu()" style="border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.05); font-weight:400;">🎮 В МЕНЮ</button>
+                    <button class="menu-btn back-btn" onclick="showSettings()">🎮 В МЕНЮ</button>
                 </div>
             </div>
         </div>
@@ -195,13 +236,22 @@
     <script>
         const canvas = document.getElementById('game');
         const ctx = canvas.getContext('2d');
+        const body = document.body;
         
         const W = 620, H = 400;
         
         let score, lives, level, gameRunning, gamePaused, gameOver, gameStarted;
-        let speedMultiplier, baseSpeed, speedTimer, selectedSpeed;
+        let speedMultiplier, baseSpeed, speedTimer, selectedSpeed = 1;
         let particles, bricks;
         let brickRows, brickCols;
+        let currentTheme = 'default';
+        
+        const themes = {
+            default: { bg: '#0d0d20', grid: 'rgba(255,255,255,0.02)', platform: '#4488ff', platformGrad: ['#66aaff', '#2255cc'] },
+            ocean: { bg: '#0a1822', grid: 'rgba(0,200,220,0.03)', platform: '#00aacc', platformGrad: ['#33ddff', '#006688'] },
+            sunset: { bg: '#1a1215', grid: 'rgba(255,150,100,0.03)', platform: '#ff6633', platformGrad: ['#ff8855', '#993311'] },
+            forest: { bg: '#0a1510', grid: 'rgba(100,220,150,0.03)', platform: '#33aa55', platformGrad: ['#55cc77', '#116622'] },
+        };
         
         const paddle = { w: 90, h: 12, x: W / 2 - 45, y: H - 30, speed: 8 };
         const ball = {
@@ -244,9 +294,7 @@
         
         function countBricks() {
             let c = 0;
-            for (const row of bricks)
-                for (const b of row)
-                    if (b.alive) c++;
+            for (const row of bricks) for (const b of row) if (b.alive) c++;
             return c;
         }
         
@@ -302,26 +350,44 @@
             ctx.shadowBlur = 0;
         }
         
-        function showSpeedMenu() {
-            hideAllMenus();
-            document.getElementById('speedMenu').classList.remove('hidden');
-        }
-        
-        function backToMenu() {
-            hideAllMenus();
-            document.getElementById('menuOverlay').classList.remove('hidden');
+        function setTheme(theme) {
+            currentTheme = theme;
+            body.className = theme === 'default' ? '' : 'theme-' + theme;
+            // Подсветка кнопок темы
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('selected'));
+            const themeBtns = document.querySelectorAll('.theme-btn');
+            const themeNames = ['default', 'ocean', 'sunset', 'forest'];
+            themeBtns.forEach((b, i) => {
+                if (themeNames[i] === theme) b.classList.add('selected');
+            });
         }
         
         function selectSpeed(s) {
             selectedSpeed = s;
             baseSpeed = [4, 5.5, 7, 9][s];
-            document.querySelectorAll('#speedMenu .menu-btn.small').forEach((b, i) => {
-                b.classList.toggle('selected', i === s);
-            });
+            const btns = document.querySelectorAll('#speedButtons .menu-btn.small');
+            btns.forEach((b, i) => b.classList.toggle('selected', i === s));
+        }
+        
+        function showSettings() {
+            hideAllMenus();
+            document.getElementById('settingsMenu').classList.remove('hidden');
+            // Подсветить текущую скорость
+            const s = selectedSpeed !== undefined ? selectedSpeed : 1;
+            const btns = document.querySelectorAll('#speedButtons .menu-btn.small');
+            btns.forEach((b, i) => b.classList.toggle('selected', i === s));
+            // Подсветить текущую тему
+            setTheme(currentTheme);
+        }
+        
+        function backToMenu() {
+            hideAllMenus();
+            document.getElementById('menuOverlay').classList.remove('hidden');
+            setTheme(currentTheme);
         }
         
         function hideAllMenus() {
-            ['menuOverlay', 'speedMenu', 'gameOverOverlay', 'pauseOverlay'].forEach(id => {
+            ['menuOverlay', 'settingsMenu', 'gameOverOverlay', 'pauseOverlay'].forEach(id => {
                 document.getElementById(id).classList.add('hidden');
             });
         }
@@ -446,16 +512,18 @@
                 }
             }
             
-            // Мгновенное следование за мышью (как в классическом арканоиде)
             paddle.x = mouseX - paddle.w / 2;
             paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
         }
         
         function draw() {
+            const theme = themes[currentTheme];
+            canvas.style.background = theme.bg;
+            
             ctx.clearRect(0, 0, W, H);
             
             // Сетка
-            ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+            ctx.strokeStyle = theme.grid;
             for (let x = 0; x < W; x += 40) { ctx.beginPath();
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, H);
@@ -481,11 +549,11 @@
             }
             
             // Платформа
-            ctx.shadowColor = '#4488ff';
+            ctx.shadowColor = theme.platform;
             ctx.shadowBlur = 16;
             const grad = ctx.createLinearGradient(paddle.x, paddle.y, paddle.x, paddle.y + paddle.h);
-            grad.addColorStop(0, '#66aaff');
-            grad.addColorStop(1, '#2255cc');
+            grad.addColorStop(0, theme.platformGrad[0]);
+            grad.addColorStop(1, theme.platformGrad[1]);
             ctx.fillStyle = grad;
             ctx.beginPath();
             ctx.roundRect(paddle.x, paddle.y, paddle.w, paddle.h, 6);
@@ -560,9 +628,12 @@
             requestAnimationFrame(gameLoop);
         }
         
+        // Старт
         resetState();
         createBricks();
         updateUI();
+        selectSpeed(1);
+        setTheme('default');
         gameLoop();
     </script>
 </body>
